@@ -22,12 +22,14 @@ namespace DAL
 
         public virtual DbSet<State> States { get; set; }
 
+        public virtual DbSet<Order> Orders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new StatesEntityTypeConfiguration(modelBuilder));
-
+            modelBuilder.ApplyConfiguration(new OrdersEntityTypeConfiguration(modelBuilder));
             //modelBuilder.ApplyConfiguration(new ParsingTaskEntityTypeConfiguration());
         }
     }

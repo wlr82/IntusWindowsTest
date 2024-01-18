@@ -15,6 +15,8 @@ namespace DAL.Repositories
 
         public IStatesRepository States { get; }
 
+        public IOrdersRepository Orders { get; }
+
         public IDbContextTransaction Transaction { get; private set; }
 
         public UnitOfWork(ApplicationDBContext context)
@@ -23,6 +25,7 @@ namespace DAL.Repositories
             _repositories = new ConcurrentDictionary<Type, object>();
 
             States = new StatesRepository(context);
+            Orders = new OrdersRepository(context);
         }
 
         public Task<int> CompleteAsync(CancellationToken cancellationToken)
