@@ -42,7 +42,7 @@ else
 
     string btnText = string.Empty;
 
-    DAL.Entities.Order? order = new DAL.Entities.Order { Name = "New order", State = new DAL.Entities.State()};
+    DAL.Entities.Order order = new DAL.Entities.Order { Name = "New order", State = new DAL.Entities.State()};
 
     List<DAL.Entities.State> states = new List<DAL.Entities.State>();
 
@@ -62,6 +62,10 @@ else
                 order = result;
             else
                 NavigationManager.NavigateTo("/order");
+        }
+        else
+        {
+            order.State = states.FirstOrDefault();
         }
     }
 

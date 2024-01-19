@@ -28,9 +28,15 @@ namespace IntusWindowsTest.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<Order?> UpdateProduct(int id, Order order, CancellationToken ct)
+        public async Task<Order?> UpdateOrder(int id, Order order, CancellationToken ct)
         {
             return await _orderService.UpdateOrder(id, order, ct);
+        }
+
+        [HttpPost]
+        public async Task<Order?> CreateOrder(Order order, CancellationToken ct)
+        {
+            return await _orderService.CreateOrder(order, ct);
         }
     }
 }

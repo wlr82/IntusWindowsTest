@@ -52,5 +52,25 @@ namespace IntusWindowsTest.Server.Services.OrderService
 
             return dbOrder;
         }
+
+        public async Task<Order?> CreateOrder(Order order, CancellationToken ct)
+        {
+            Order? dbOrder;
+            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            {
+                //dbOrder = await uow.Orders.GetByIdAsync(orderId);
+                var dbState = await uow.States.GetByIdAsync(order.State.Id, ct);
+                var entOrder = new Order() 
+                { 
+                    Name = order.Name,
+                    State = dbState
+                };
+
+                dbOrder = await uow.Orders.AddAndReturnEntityAsync(entOrder, ct);
+                await uow.CompleteAsync(ct);
+            }
+
+            return dbOrder;
+        }
     }
 }

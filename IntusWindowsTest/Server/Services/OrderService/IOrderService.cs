@@ -9,5 +9,7 @@ namespace IntusWindowsTest.Server.Services.OrderService
         Task<Order?> GetOrderById(int orderId);
 
         Task<Order?> UpdateOrder(int orderId, Order order, CancellationToken ct);
+
+        Task<Order?> CreateOrder(Order order, CancellationToken ct);
     }
 }
