@@ -1,0 +1,7 @@
+﻿Some commands for managing migrations
+
+dotnet ef migrations list
+dotnet ef database update
+dotnet ef database drop
+dotnet ef migrations add InitDB -c ApplicationDBContext -o Migrations
+dotnet ef migrations remove
