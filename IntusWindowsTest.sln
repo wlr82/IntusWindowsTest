@@ -9,6 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntusWindowsTest.Client", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "IntusWindowsTest\DAL\DAL.csproj", "{3583C2F0-E6CD-4943-BB35-A49E1131E112}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{FDC7693F-5329-4245-B35D-CD64C5D5083D}"
+	ProjectSection(SolutionItems) = preProject
+		Pref Test Task.pdf = Pref Test Task.pdf
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
