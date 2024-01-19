@@ -1,5 +1,6 @@
 using IntusWindowsTest.Client;
 using IntusWindowsTest.Client.Services.OrderService;
+using IntusWindowsTest.Client.Services.StateService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -12,5 +13,6 @@ builder.Services.AddHttpClient("IntusWindowsTest.ServerAPI", client => client.Ba
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("IntusWindowsTest.ServerAPI"));
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IStateService, StateService>();
 
 await builder.Build().RunAsync();

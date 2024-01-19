@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntusWindowsTest.Server", "IntusWindowsTest\Server\IntusWindowsTest.Server.csproj", "{A666F507-7421-4E99-9FDB-466DC3433F88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntusWindowsTest.Server", "IntusWindowsTest\Server\IntusWindowsTest.Server.csproj", "{A666F507-7421-4E99-9FDB-466DC3433F88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntusWindowsTest.Client", "IntusWindowsTest\Client\IntusWindowsTest.Client.csproj", "{85A272D8-E921-4DDA-903A-CCB9EF155CD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntusWindowsTest.Client", "IntusWindowsTest\Client\IntusWindowsTest.Client.csproj", "{85A272D8-E921-4DDA-903A-CCB9EF155CD2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "IntusWindowsTest\DAL\DAL.csproj", "{3583C2F0-E6CD-4943-BB35-A49E1131E112}"
 EndProject

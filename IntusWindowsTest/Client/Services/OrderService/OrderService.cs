@@ -8,12 +8,12 @@ namespace IntusWindowsTest.Client.Services.OrderService
     public class OrderService : IOrderService
     {
         private readonly HttpClient _http;
-        private readonly NavigationManager _navigationManger;
+        private readonly NavigationManager _navigationManager;
 
         public OrderService(HttpClient http, NavigationManager navigationManger)
         {
             _http = http;
-            _navigationManger = navigationManger;
+            _navigationManager = navigationManger;
         }
 
         public List<Order> Orders { get; set; } = new List<Order>();
@@ -34,6 +34,18 @@ namespace IntusWindowsTest.Client.Services.OrderService
                 return await result.Content.ReadFromJsonAsync<Order>();
             }
             return null;
+        }
+
+        public async Task CreateOrder(Order order)
+        {
+            await _http.PostAsJsonAsync("api/order", order);
+            _navigationManager.NavigateTo("orders");
+        }
+
+        public async Task UpdateOrder(int id, Order order)
+        {
+            await _http.PutAsJsonAsync($"api/order/{id}", order);
+            _navigationManager.NavigateTo("orders");
         }
     }
 }

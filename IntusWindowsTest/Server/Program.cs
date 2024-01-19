@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using IntusWindowsTest.Server.Services.OrderService;
+using IntusWindowsTest.Server.Services.StateService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 // Ent services
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IStateService, StateService>();
 
 var app = builder.Build();
 InitializeDatabase(app);
