@@ -1,46 +1,103 @@
 ﻿@page "/orders"
 @inject IOrderService OrderService
+@inject IWindowService WindowService
 @inject NavigationManager NavigationManager
 
-<h3>Orders</h3>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h4>Orders</h4>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>State</th>
-            <th>
-                <button class="btn btn-primary"
-                        @onclick="CreateOrder">
-                    Create Order
-                </button>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var order in OrderService.Orders)
-        {
-            string colorClass = (order == SelectedOrder) ? "bg-info" : "";
-            <tr class="@colorClass" style="cursor:pointer" @onclick="() => { SelectedOrder = order; }">
-                <td>@order.Name</td>
-                <td>@order.State.Code</td>
-                <td>
-                    <button class="btn btn-primary"
-                            @onclick="(() => ShowOrder(order.Id))">
-                        <i class="oi oi-pencil"></i>
-                    </button>
-                    <button class="btn btn-danger"
-                            @onclick="(() => DeleteOrder(order.Id))">
-                        <i class="oi oi-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>State</th>
+                        <th style="min-width: 100px;">
+                            <button class="btn btn-primary"
+                                    @onclick="CreateOrder">
+                                @* Create order *@
+                                <i class="oi oi-plus"></i>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in OrderService.Orders)
+                    {
+                        string colorClass = (order == SelectedOrder) ? "bg-info" : "";
+                        <tr class="@colorClass" style="cursor:pointer" 
+                            @onclick="async () => { SelectedOrder = order; await RefreshWindowsByOrderId(order.Id);}">
+                            <td>@order.Name</td>
+                            <td>@order.State.Code</td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        @onclick="(() => ShowOrder(order.Id))">
+                                    <i class="oi oi-pencil"></i>
+                                </button>
+                                <button class="btn btn-danger"
+                                        @onclick="(() => DeleteOrder(order.Id))">
+                                    <i class="oi oi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+        <div class="col">
+            <h4>Windows</h4>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity of windows</th>
+                        <th>Total sub elements</th>
+                        <th style="min-width: 100px;">
+                            <button class="btn btn-primary"
+                                    @onclick="CreateOrder">
+                                @* Create window *@
+                                <i class="oi oi-plus"></i>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var window in WindowService.Windows)
+                    {
+                        string colorClass = (window == SelectedWindow) ? "bg-info" : "";
+                        <tr class="@colorClass" style="cursor:pointer" @onclick="() => { SelectedWindow = window; }">
+                            <td>@window.Name</td>
+                            <td>@window.QuantityOfWindows</td>
+                            <td>000</td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        @* @onclick="(() => ShowOrder(win.Id)) *@">
+                                    <i class="oi oi-pencil"></i>
+                                </button>
+                                <button class="btn btn-danger"
+                                        @* @onclick="(() => DeleteOrder(order.Id)) *@">
+                                    <i class="oi oi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+        <div class="col">
+            <h4>Sub elements</h4>
+        </div>
+    </div>
+</div>
+
 
 @code {
     DAL.Entities.Order SelectedOrder = new DAL.Entities.Order();
+    DAL.Entities.Window SelectedWindow = new DAL.Entities.Window();
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,5 +117,10 @@
     async Task DeleteOrder(int id)
     {
         await OrderService.DeleteOrder(id);
+    }
+
+    async Task RefreshWindowsByOrderId (int orderId)
+    {
+        await WindowService.GetWindowsByOrderId(orderId);
     }
 }

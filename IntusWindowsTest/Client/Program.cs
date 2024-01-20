@@ -1,6 +1,7 @@
 using IntusWindowsTest.Client;
 using IntusWindowsTest.Client.Services.OrderService;
 using IntusWindowsTest.Client.Services.StateService;
+using IntusWindowsTest.Client.Services.WindowService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -14,5 +15,6 @@ builder.Services.AddHttpClient("IntusWindowsTest.ServerAPI", client => client.Ba
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("IntusWindowsTest.ServerAPI"));
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IStateService, StateService>();
+builder.Services.AddScoped<IWindowService, WindowService>();
 
 await builder.Build().RunAsync();

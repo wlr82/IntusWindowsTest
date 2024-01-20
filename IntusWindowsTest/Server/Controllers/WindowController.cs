@@ -20,5 +20,11 @@ namespace IntusWindowsTest.Server.Controllers
         {
             return await _windowService.GetWindows();
         }
+
+        [HttpGet("order/{orderId}")]
+        public async Task<List<Window>> GetWindowsByOrderId(int orderId)
+        {
+            return await _windowService.GetWindowsByOrderId(orderId);
+        }
     }
 }

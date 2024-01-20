@@ -22,5 +22,15 @@ namespace IntusWindowsTest.Server.Services.WindowsService
             }
             return result;
         }
+
+        public async Task<List<Window>> GetWindowsByOrderId(int orderId)
+        {
+            List<Window> result = new();
+            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            {
+                result = await uow.Windows.GetWindowsByOrderId(orderId);
+            }
+            return result;
+        }
     }
 }
