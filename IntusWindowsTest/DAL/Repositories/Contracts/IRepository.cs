@@ -10,5 +10,6 @@ namespace DAL.Repositories.Contracts
         Task AddAsync(TEntity? entity, CancellationToken cancellationToken);
         Task<TEntity> AddAndReturnEntityAsync(TEntity? entity, CancellationToken cancellationToken);
         Task<TEntity?> GetByIdAsync(TIdentity id, CancellationToken cancellationToken);
+        Task<bool> DeleteByIdAsync(TIdentity id, CancellationToken cancellationToken);
     }
 }

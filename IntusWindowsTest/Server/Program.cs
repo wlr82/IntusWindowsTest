@@ -5,10 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using IntusWindowsTest.Server.Services.OrderService;
 using IntusWindowsTest.Server.Services.StateService;
+using IntusWindowsTest.Server.Services.WindowsService;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 builder.Services.AddRazorPages();
 
 // DB
@@ -24,6 +27,7 @@ builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 // Ent services
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IStateService, StateService>();
+builder.Services.AddScoped<IWindowService, WindowService>();
 
 var app = builder.Build();
 InitializeDatabase(app);

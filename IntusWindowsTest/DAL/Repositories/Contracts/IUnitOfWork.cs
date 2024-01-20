@@ -6,9 +6,9 @@ namespace DAL.Repositories.Contracts
     public interface IUnitOfWork : IDisposable
     {
         IStatesRepository States { get; }
-
         IOrdersRepository Orders { get; }
-
+        IWindowsRepository Windows { get; }
+        
         Task<int> CompleteAsync(CancellationToken cancellationToken);
 
         IRepository<TEntity, TIdentity> GetRepository<TEntity, TIdentity>()

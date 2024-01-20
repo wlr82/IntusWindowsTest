@@ -9,19 +9,29 @@
         <tr>
             <th>Name</th>
             <th>State</th>
-            <th></th>
+            <th>
+                <button class="btn btn-primary"
+                        @onclick="CreateOrder">
+                    Create Order
+                </button>
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var order in OrderService.Orders)
         {
-            <tr>
+            string colorClass = (order == SelectedOrder) ? "bg-info" : "";
+            <tr class="@colorClass" style="cursor:pointer" @onclick="() => { SelectedOrder = order; }">
                 <td>@order.Name</td>
                 <td>@order.State.Code</td>
                 <td>
                     <button class="btn btn-primary"
                             @onclick="(() => ShowOrder(order.Id))">
                         <i class="oi oi-pencil"></i>
+                    </button>
+                    <button class="btn btn-danger"
+                            @onclick="(() => DeleteOrder(order.Id))">
+                        <i class="oi oi-trash"></i>
                     </button>
                 </td>
             </tr>
@@ -30,6 +40,8 @@
 </table>
 
 @code {
+    DAL.Entities.Order SelectedOrder = new DAL.Entities.Order();
+
     protected override async Task OnInitializedAsync()
     {
         await OrderService.GetOrders();
@@ -38,5 +50,15 @@
     void ShowOrder(int id)
     {
         NavigationManager.NavigateTo($"order/{id}");
+    }
+
+    void CreateOrder()
+    {
+        NavigationManager.NavigateTo("/order");
+    }
+
+    async Task DeleteOrder(int id)
+    {
+        await OrderService.DeleteOrder(id);
     }
 }

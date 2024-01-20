@@ -1,0 +1,54 @@
+﻿@page "/test"
+
+<h3>  </h3>
+
+<table class="table table-bordered accountTable">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (AccountsList != null)
+        {
+            @foreach (var account in AccountsList)
+            {
+                string colorClass= (account == SelectedAccount) ? "MyHighlightClass" : "";
+                <tr class="@colorClass" style="color:navy; cursor:pointer; text-decoration:underline" @onclick="() => { ReturnRowData(account); SelectedAccount = account; }">
+                    <td>@account.Id</td>
+                    <td>@account.Name</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <p>No accounts to display...</p>
+        }
+
+    </tbody>
+</table>
+@if (SelectedAccount.Id != 0)
+{
+    <h3>Selected account #@SelectedAccount.Id (@SelectedAccount.Name) </h3>
+}
+
+@code {
+    public class Account
+    {
+        public int Id;
+        public string Name = "";
+    }
+    [Parameter]
+    public List<Account> AccountsList { get; set; } = new List<Account>() {
+            new Account(){ Id = 1, Name="John" },
+            new Account(){ Id = 2, Name="Jeff" },
+            new Account(){ Id = 3, Name="Jane" }
+     };
+    Account SelectedAccount { get; set; } = new Account();
+
+    void ReturnRowData(Account account)
+    {
+        // Do data stuff.
+    }
+}

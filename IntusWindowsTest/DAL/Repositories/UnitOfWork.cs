@@ -19,6 +19,8 @@ namespace DAL.Repositories
 
         public IDbContextTransaction Transaction { get; private set; }
 
+        public IWindowsRepository Windows { get; }
+
         public UnitOfWork(ApplicationDBContext context)
         {
             _context = context;
@@ -26,6 +28,7 @@ namespace DAL.Repositories
 
             States = new StatesRepository(context);
             Orders = new OrdersRepository(context);
+            Windows = new WindowsRepository(context);
         }
 
         public Task<int> CompleteAsync(CancellationToken cancellationToken)

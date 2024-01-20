@@ -56,6 +56,29 @@ namespace DAL.Migrations
                     b.ToTable("States", (string)null);
                 });
 
+            modelBuilder.Entity("DAL.Entities.Window", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuantityOfWindows")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Windows", (string)null);
+                });
+
             modelBuilder.Entity("DAL.Entities.Order", b =>
                 {
                     b.HasOne("DAL.Entities.State", "State")
@@ -65,6 +88,22 @@ namespace DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("State");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Window", b =>
+                {
+                    b.HasOne("DAL.Entities.Order", "Order")
+                        .WithMany("Windows")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Order", b =>
+                {
+                    b.Navigation("Windows");
                 });
 #pragma warning restore 612, 618
         }

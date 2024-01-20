@@ -56,6 +56,18 @@ namespace DAL.Repositories
             return await DbSet.FindAsync(id, cancellationToken);
         }
 
+        public async Task<bool> DeleteByIdAsync(TIdentity id, CancellationToken cancellationToken)
+        {
+            var dbEntity = await DbSet.FindAsync(id, cancellationToken);
+            if (dbEntity == null)
+            {
+                return false;
+            }
+
+            DbSet.Remove(dbEntity);
+            return true;
+        }
+
         ~Repository()
         {
             Dispose(false);

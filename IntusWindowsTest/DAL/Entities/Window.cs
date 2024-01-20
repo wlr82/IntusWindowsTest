@@ -2,14 +2,15 @@
 
 namespace DAL.Entities
 {
-    public class Order : Entity
+    public class Window : Entity
     {
         [Required]
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        public virtual State State { get; set; }
+        public int QuantityOfWindows { get; set; }
 
-        public virtual ICollection<Window> Windows { get; set; } = new List<Window>();
+        [Required]
+        public virtual Order Order { get; set; }
     }
 }

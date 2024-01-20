@@ -38,5 +38,11 @@ namespace IntusWindowsTest.Server.Controllers
         {
             return await _orderService.CreateOrder(order, ct);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<bool> DeleteOrder(int id, CancellationToken ct)
+        {
+            return await _orderService.DeleteOrder(id, ct);
+        }
     }
 }

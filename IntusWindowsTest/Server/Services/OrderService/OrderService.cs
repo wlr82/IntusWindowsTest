@@ -72,5 +72,22 @@ namespace IntusWindowsTest.Server.Services.OrderService
 
             return dbOrder;
         }
+
+        public async Task<bool> DeleteOrder(int orderId, CancellationToken ct)
+        {
+            bool result;
+            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            {
+                result = await uow.Orders.DeleteByIdAsync(orderId, ct);
+                if (result == false)
+                {
+                    return false;
+                }   
+                                    
+                await uow.CompleteAsync(ct);
+            }
+
+            return true;
+        }
     }
 }

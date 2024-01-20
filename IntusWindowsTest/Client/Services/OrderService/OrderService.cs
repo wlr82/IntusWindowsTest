@@ -47,5 +47,11 @@ namespace IntusWindowsTest.Client.Services.OrderService
             await _http.PutAsJsonAsync($"api/order/{id}", order);
             _navigationManager.NavigateTo("orders");
         }
+
+        public async Task DeleteOrder(int id)
+        {
+            var result = await _http.DeleteAsync($"api/order/{id}");
+            await GetOrders();
+        }
     }
 }
