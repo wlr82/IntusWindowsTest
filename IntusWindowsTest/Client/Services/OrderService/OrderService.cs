@@ -1,4 +1,5 @@
 ﻿using DAL.Entities;
+using IntusWindowsTest.Client.Services.WindowService;
 using Microsoft.AspNetCore.Components;
 using System.Net;
 using System.Net.Http.Json;
@@ -9,11 +10,16 @@ namespace IntusWindowsTest.Client.Services.OrderService
     {
         private readonly HttpClient _http;
         private readonly NavigationManager _navigationManager;
+        private readonly IWindowService _windowService;
 
-        public OrderService(HttpClient http, NavigationManager navigationManger)
+        public OrderService(
+            HttpClient http, 
+            NavigationManager navigationManger,
+            IWindowService windowService)
         {
             _http = http;
             _navigationManager = navigationManger;
+            _windowService = windowService;
         }
 
         public List<Order> Orders { get; set; } = new List<Order>();
@@ -38,20 +44,26 @@ namespace IntusWindowsTest.Client.Services.OrderService
 
         public async Task CreateOrder(Order order)
         {
-            await _http.PostAsJsonAsync("api/order", order);
-            _navigationManager.NavigateTo("orders");
+            var result = await _http.PostAsJsonAsync("api/order", order);
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                order = await result.Content.ReadFromJsonAsync<Order>();
+            }
+            _navigationManager.NavigateTo($"orders/{order?.Id}");
         }
 
         public async Task UpdateOrder(int id, Order order)
         {
             await _http.PutAsJsonAsync($"api/order/{id}", order);
-            _navigationManager.NavigateTo("orders");
+            _navigationManager.NavigateTo($"orders/{id}");
         }
 
         public async Task DeleteOrder(int id)
         {
-            var result = await _http.DeleteAsync($"api/order/{id}");
+            await _http.DeleteAsync($"api/order/{id}");
             await GetOrders();
+            _windowService.Windows = new List<Window>();
+            _navigationManager.NavigateTo("orders/0");
         }
     }
 }

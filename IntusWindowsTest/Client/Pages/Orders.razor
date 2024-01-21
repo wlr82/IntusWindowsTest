@@ -1,4 +1,6 @@
 ﻿@page "/orders"
+@page "/orders/{orderId:int}/window/{windowId:int}"
+@page "/orders/{orderId:int}"
 @inject IOrderService OrderService
 @inject IWindowService WindowService
 @inject NavigationManager NavigationManager
@@ -97,14 +99,43 @@
     </div>
 </div>
 
-
 @code {
+    [Parameter]
+    public int? orderId { get; set; }
+
+    [Parameter]
+    public int? windowId { get; set; }
+
     DAL.Entities.Order SelectedOrder = new DAL.Entities.Order();
     DAL.Entities.Window SelectedWindow = new DAL.Entities.Window();
 
     protected override async Task OnInitializedAsync()
     {
         await OrderService.GetOrders();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await SetPositions();
+    }
+
+    async Task SetPositions()
+    {
+        if (orderId != null)
+        {
+            SelectedOrder = OrderService.Orders.FirstOrDefault(o => o.Id == orderId) ?? new DAL.Entities.Order();
+            await RefreshWindowsByOrderId((int)orderId);
+        }
+        else
+        {
+            SelectedOrder = OrderService.Orders.FirstOrDefault() ?? new DAL.Entities.Order();
+            await RefreshWindowsByOrderId(SelectedOrder.Id);
+        }
+
+        if (windowId != null)
+        {
+            SelectedWindow = WindowService.Windows.FirstOrDefault(w => w.Id == windowId) ?? new DAL.Entities.Window();
+        }
     }
 
     void ShowOrder(int id)

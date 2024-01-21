@@ -38,13 +38,17 @@ namespace IntusWindowsTest.Client.Services.WindowService
         public async Task UpdateWindow(Window window)
         {
             await _http.PutAsJsonAsync("api/window", window);
-            _navigationManager.NavigateTo("orders");
+            _navigationManager.NavigateTo($"orders/{window?.Order.Id}/window/{window?.Id}");
         }
 
         public async Task CreateWindow(Window window)
         {
-            await _http.PostAsJsonAsync("api/window", window);
-            _navigationManager.NavigateTo("orders");
+            var result = await _http.PostAsJsonAsync("api/window", window);
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                 window = await result.Content.ReadFromJsonAsync<Window>();
+            }
+            _navigationManager.NavigateTo($"orders/{window?.Order.Id}/window/{window?.Id}");
         }
 
         public async Task DeleteWindow(int orderId, int windowId)

@@ -21,10 +21,9 @@ namespace DAL
         }
 
         public virtual DbSet<State> States { get; set; }
-
         public virtual DbSet<Order> Orders { get; set; }
-
         public virtual DbSet<Window> Windows { get; set; }
+        public virtual DbSet<ElementType> ElementTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,6 +32,7 @@ namespace DAL
             modelBuilder.ApplyConfiguration(new StatesEntityTypeConfiguration(modelBuilder));
             modelBuilder.ApplyConfiguration(new OrdersEntityTypeConfiguration(modelBuilder));
             modelBuilder.ApplyConfiguration(new WindowsEntityTypeConfiguration(modelBuilder));
+            modelBuilder.ApplyConfiguration(new ElementTypeEntityTypeConfiguration(modelBuilder));
             //modelBuilder.ApplyConfiguration(new ParsingTaskEntityTypeConfiguration());
         }
     }

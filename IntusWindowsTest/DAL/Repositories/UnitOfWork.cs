@@ -14,12 +14,10 @@ namespace DAL.Repositories
         private bool _disposed;
 
         public IStatesRepository States { get; }
-
         public IOrdersRepository Orders { get; }
-
         public IDbContextTransaction Transaction { get; private set; }
-
         public IWindowsRepository Windows { get; }
+        public IElementTypesRepository ElementTypes { get; }
 
         public UnitOfWork(ApplicationDBContext context)
         {
@@ -29,6 +27,7 @@ namespace DAL.Repositories
             States = new StatesRepository(context);
             Orders = new OrdersRepository(context);
             Windows = new WindowsRepository(context);
+            ElementTypes = new ElementTypesRepository(context);
         }
 
         public Task<int> CompleteAsync(CancellationToken cancellationToken)
