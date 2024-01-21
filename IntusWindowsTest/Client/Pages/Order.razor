@@ -44,13 +44,10 @@ else
 
     DAL.Entities.Order order = new DAL.Entities.Order { Name = "New order", State = new DAL.Entities.State() { Code = string.Empty} };
 
-    List<DAL.Entities.State> states = new List<DAL.Entities.State>();
-
     protected override async Task OnInitializedAsync()
     {
         btnText = Id == null ? "Save New Order" : "Update Order";
         await StateService.GetStates();
-        states = StateService.States;
     }
 
     protected override async Task OnParametersSetAsync()
@@ -65,7 +62,7 @@ else
         }
         else
         {
-            order.State = new DAL.Entities.State() { Code = string.Empty};
+            order.State.Id = StateService.States.FirstOrDefault().Id;
         }
     }
 
