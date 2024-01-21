@@ -32,5 +32,75 @@ namespace IntusWindowsTest.Server.Services.WindowsService
             }
             return result;
         }
+
+        public async Task<Window?> GetWindowById(int windowId, CancellationToken cancellationToken)
+        {
+            Window? dbWindow;
+            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            {
+                dbWindow = await uow.Windows.GetByIdAsync(windowId, cancellationToken);
+            }
+
+            return dbWindow;
+        }
+
+        public async Task<Window?> UpdateWindow(Window window, CancellationToken ct)
+        {
+            Window? dbWindow;
+            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            {
+                dbWindow = await uow.Windows.GetByIdAsync(window.Id, ct);
+                if (dbWindow != null)
+                {
+                    dbWindow.Name = window.Name;
+                    dbWindow.QuantityOfWindows = window.QuantityOfWindows;
+                }
+
+                await uow.CompleteAsync(ct);
+            }
+
+            return dbWindow;
+        }
+
+        public async Task<Window?> CreateWindow(Window window, CancellationToken ct)
+        {
+            Window? dbWindow;
+            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            {
+                var dbOrder = await uow.Orders.GetByIdAsync(window.Order.Id, ct);
+                if (dbOrder == null)
+                {
+                    return null;
+                }
+                var entWindow = new Window()
+                {
+                    Name = window.Name,
+                    QuantityOfWindows = window.QuantityOfWindows,
+                    Order = dbOrder
+                };
+
+                dbWindow = await uow.Windows.AddAndReturnEntityAsync(entWindow, ct);
+                await uow.CompleteAsync(ct);
+            }
+
+            return dbWindow;
+        }
+
+        public async Task<bool> DeleteWindow(int windowId, CancellationToken ct)
+        {
+            bool result;
+            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            {
+                result = await uow.Windows.DeleteByIdAsync(windowId, ct);
+                if (result == false)
+                {
+                    return false;
+                }
+
+                await uow.CompleteAsync(ct);
+            }
+
+            return true;
+        }
     }
 }

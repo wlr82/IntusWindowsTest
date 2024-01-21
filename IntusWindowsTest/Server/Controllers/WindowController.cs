@@ -26,5 +26,29 @@ namespace IntusWindowsTest.Server.Controllers
         {
             return await _windowService.GetWindowsByOrderId(orderId);
         }
+
+        [HttpGet("{id}")]
+        public async Task<Window?> GetWindowById(int id, CancellationToken cancellationToken)
+        {
+            return await _windowService.GetWindowById(id, cancellationToken);
+        }
+
+        [HttpPut]
+        public async Task<Window?> UpdateWindow(Window window, CancellationToken cancellationToken)
+        {
+            return await _windowService.UpdateWindow(window, cancellationToken);
+        }
+
+        [HttpPost]
+        public async Task<Window?> CreateWindow(Window window, CancellationToken cancellationToken)
+        {
+            return await _windowService.CreateWindow(window, cancellationToken);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<bool> DeleteWindow(int id, CancellationToken cancellationToken)
+        {
+            return await _windowService.DeleteWindow(id, cancellationToken);
+        }
     }
 }

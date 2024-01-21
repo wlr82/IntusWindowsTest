@@ -56,11 +56,14 @@
                         <th>Quantity of windows</th>
                         <th>Total sub elements</th>
                         <th style="min-width: 100px;">
-                            <button class="btn btn-primary"
-                                    @onclick="CreateOrder">
-                                @* Create window *@
-                                <i class="oi oi-plus"></i>
-                            </button>
+                            @if (SelectedOrder.Id > 0)
+                            {
+                                <button class="btn btn-primary"
+                                        @onclick="(() => CreateWindow(SelectedOrder.Id))">
+                                    @* Create window *@
+                                    <i class="oi oi-plus"></i>
+                                </button>
+                            }
                         </th>
                     </tr>
                 </thead>
@@ -74,11 +77,11 @@
                             <td>000</td>
                             <td>
                                 <button class="btn btn-primary"
-                                        @* @onclick="(() => ShowOrder(win.Id)) *@">
+                                        @onclick="(() => EditWindow(window.Order.Id, window.Id))">
                                     <i class="oi oi-pencil"></i>
                                 </button>
                                 <button class="btn btn-danger"
-                                        @* @onclick="(() => DeleteOrder(order.Id)) *@">
+                                        @onclick="(() => DeleteWindow(window.Order.Id, window.Id))">
                                     <i class="oi oi-trash"></i>
                                 </button>
                             </td>
@@ -122,5 +125,20 @@
     async Task RefreshWindowsByOrderId (int orderId)
     {
         await WindowService.GetWindowsByOrderId(orderId);
+    }
+
+    void CreateWindow(int orderId)
+    {
+        NavigationManager.NavigateTo($"/order/{orderId}/window/");
+    }
+
+    void EditWindow(int orderId, int windowId)
+    {
+        NavigationManager.NavigateTo($"/order/{orderId}/window/{windowId}");
+    }
+
+    async Task DeleteWindow(int orderId, int windowId)
+    {
+        await WindowService.DeleteWindow(orderId, windowId);
     }
 }

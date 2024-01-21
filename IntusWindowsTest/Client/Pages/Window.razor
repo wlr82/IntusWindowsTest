@@ -1,0 +1,68 @@
+﻿@page "/order/{orderId:int}/window/"
+@page "/order/{orderId:int}/window/{id:int}"
+@inject IWindowService WindowService
+@inject IOrderService OrderService
+
+@if (Id is null)
+{
+    <PageTitle>Create a new window</PageTitle>
+    <h3>Create a new window</h3>
+}
+else
+{
+    <PageTitle>Edit @window?.Name</PageTitle>
+    <h3>Edit @window?.Name</h3>
+}
+
+<EditForm Model="window" OnSubmit="HandleSubmit">
+    <div>
+        <label for="name">Name</label>
+        <InputText id="name" @bind-Value="window.Name" class="form-control" />
+    </div>
+    <div>
+        <label for="QuantityOfWindows">Quantity of windows</label>
+        <InputNumber id="QuantityOfWindows" @bind-Value="window.QuantityOfWindows" class="form-control" />
+    </div>    
+    <br />
+    <button type="submit" class="btn btn-primary">@btnText</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? orderId { get; set; }
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    DAL.Entities.Window window = new DAL.Entities.Window() { Name = "New window", Order = new DAL.Entities.Order() { State = new DAL.Entities.State()} };
+
+    string btnText = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var result = await WindowService.GetWindowById((int)Id);
+            if (result is not null)
+                window = result;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        btnText = Id == null ? "Save new window" : "Update window";
+    }
+
+    async Task HandleSubmit()
+    {
+        window.Order = await OrderService.GetOrderById((int)orderId);
+        if (Id is null)
+        {
+            await WindowService.CreateWindow(window);
+        }
+        else
+        {
+            await WindowService.UpdateWindow(window);
+        }
+    }
+}
