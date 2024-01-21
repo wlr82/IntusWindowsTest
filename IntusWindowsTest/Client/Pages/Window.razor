@@ -34,7 +34,7 @@ else
     [Parameter]
     public int? Id { get; set; }
 
-    DAL.Entities.Window window = new DAL.Entities.Window() { Name = "New window", Order = new DAL.Entities.Order() { State = new DAL.Entities.State()} };
+    DAL.Entities.Window window = new DAL.Entities.Window() { Name = "New window", Order = new DAL.Entities.Order() { State = new DAL.Entities.State() {Code = string.Empty} } };
 
     string btnText = string.Empty;
 

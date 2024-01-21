@@ -4,7 +4,6 @@ namespace DAL.Entities
 {
     public class State : Entity
     {
-        [Required]
-        public string Code { get; set; } = string.Empty;
+        public required string Code { get; set; } = string.Empty;
     }
 }

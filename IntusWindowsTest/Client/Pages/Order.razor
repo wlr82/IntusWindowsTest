@@ -23,7 +23,7 @@ else
     <div>
         <label for="state">State</label>
         <InputSelect id="state" class="form-control" placeholder="State" @bind-Value="order.State.Id">
-            @foreach (var state in states)
+            @foreach (var state in StateService.States)
             {
                 <option value="@state.Id">
                     @state.Code
@@ -42,7 +42,7 @@ else
 
     string btnText = string.Empty;
 
-    DAL.Entities.Order order = new DAL.Entities.Order { Name = "New order", State = new DAL.Entities.State()};
+    DAL.Entities.Order order = new DAL.Entities.Order { Name = "New order", State = new DAL.Entities.State() { Code = string.Empty} };
 
     List<DAL.Entities.State> states = new List<DAL.Entities.State>();
 
@@ -65,7 +65,7 @@ else
         }
         else
         {
-            order.State = states.FirstOrDefault();
+            order.State = new DAL.Entities.State() { Code = string.Empty};
         }
     }
 
