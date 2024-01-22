@@ -19,6 +19,7 @@ namespace DAL.Repositories
                 .GetAll()
                 .Include(w => w.Order)
                 .Where(w => w.Order.Id == orderId)
+                .Include(w => w.SubElements)
                 .ToListAsync();
         }
     }

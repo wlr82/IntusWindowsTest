@@ -18,7 +18,11 @@ namespace IntusWindowsTest.Server.Services.WindowsService
             List<Window> result = new();
             using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
             {
-                result = await uow.Windows.GetAll().Include(w => w.Order).ToListAsync();
+                result = await uow.Windows
+                    .GetAll()
+                    .Include(w => w.Order)
+                    .Include(w => w.SubElements)
+                    .ToListAsync();
             }
             return result;
         }

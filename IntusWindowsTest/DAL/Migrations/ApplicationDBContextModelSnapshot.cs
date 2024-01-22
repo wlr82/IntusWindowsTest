@@ -74,6 +74,37 @@ namespace DAL.Migrations
                     b.ToTable("States", (string)null);
                 });
 
+            modelBuilder.Entity("DAL.Entities.SubElement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Element")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("ElementTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WindowId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ElementTypeId");
+
+                    b.HasIndex("WindowId");
+
+                    b.ToTable("SubElements", (string)null);
+                });
+
             modelBuilder.Entity("DAL.Entities.Window", b =>
                 {
                     b.Property<int>("Id")
@@ -108,6 +139,25 @@ namespace DAL.Migrations
                     b.Navigation("State");
                 });
 
+            modelBuilder.Entity("DAL.Entities.SubElement", b =>
+                {
+                    b.HasOne("DAL.Entities.ElementType", "ElementType")
+                        .WithMany()
+                        .HasForeignKey("ElementTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.Window", "Window")
+                        .WithMany("SubElements")
+                        .HasForeignKey("WindowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ElementType");
+
+                    b.Navigation("Window");
+                });
+
             modelBuilder.Entity("DAL.Entities.Window", b =>
                 {
                     b.HasOne("DAL.Entities.Order", "Order")
@@ -122,6 +172,11 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.Order", b =>
                 {
                     b.Navigation("Windows");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Window", b =>
+                {
+                    b.Navigation("SubElements");
                 });
 #pragma warning restore 612, 618
         }

@@ -76,7 +76,7 @@
                         <tr class="@colorClass" style="cursor:pointer" @onclick="() => { SelectedWindow = window; }">
                             <td>@window.Name</td>
                             <td>@window.QuantityOfWindows</td>
-                            <td>000</td>
+                            <td>@window.SubElements.Count()</td>
                             <td>
                                 <button class="btn btn-primary"
                                         @onclick="(() => EditWindow(window.Order.Id, window.Id))">

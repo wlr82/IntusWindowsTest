@@ -12,5 +12,7 @@ namespace DAL.Entities
 
         [Required]
         public virtual Order Order { get; set; }
+
+        public virtual ICollection<SubElement> SubElements { get; set; } = new List<SubElement>();
     }
 }
