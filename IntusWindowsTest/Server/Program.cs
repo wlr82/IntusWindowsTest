@@ -6,6 +6,7 @@ using Serilog;
 using IntusWindowsTest.Server.Services.OrderService;
 using IntusWindowsTest.Server.Services.StateService;
 using IntusWindowsTest.Server.Services.WindowsService;
+using IntusWindowsTest.Server.Services.ElementTypeService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IStateService, StateService>();
 builder.Services.AddScoped<IWindowService, WindowService>();
+builder.Services.AddScoped<IElementTypeService, ElementTypeService>();
 
 var app = builder.Build();
 InitializeDatabase(app);
