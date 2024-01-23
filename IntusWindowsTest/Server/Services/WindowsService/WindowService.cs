@@ -22,6 +22,7 @@ namespace IntusWindowsTest.Server.Services.WindowsService
                     .GetAll()
                     .Include(w => w.Order)
                     .Include(w => w.SubElements)
+                    .ThenInclude(s => s.ElementType)
                     .ToListAsync();
             }
             return result;
@@ -58,9 +59,9 @@ namespace IntusWindowsTest.Server.Services.WindowsService
                 {
                     dbWindow.Name = window.Name;
                     dbWindow.QuantityOfWindows = window.QuantityOfWindows;
-                }
 
-                await uow.CompleteAsync(ct);
+                    await uow.CompleteAsync(ct);
+                }
             }
 
             return dbWindow;

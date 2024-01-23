@@ -1,11 +1,13 @@
 ﻿@page "/orders"
-@page "/orders/{orderId:int}/window/{windowId:int}"
 @page "/orders/{orderId:int}"
+@page "/orders/{orderId:int}/window/{windowId:int}"
+@page "/orders/{orderId:int}/window/{windowId:int}/subelement/{subElementId:int}"
 @inject IOrderService OrderService
 @inject IWindowService WindowService
 @inject NavigationManager NavigationManager
+@inject ISubElementService SubElementService
 
-<div class="container">
+<div class="container" style="min-width:100%;">
     <div class="row">
         <div class="col">
             <h4>Orders</h4>
@@ -95,6 +97,49 @@
         </div>
         <div class="col">
             <h4>Sub elements</h4>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Element</th>
+                        <th>Type</th>
+                        <th>Width</th>
+                        <th>Height</th>
+                        <th style="min-width: 100px;">
+                            @if (SelectedWindow.Id > 0)
+                            {
+                                <button class="btn btn-primary"
+                                        @onclick="(() => CreateSubElement(SelectedOrder.Id, SelectedWindow.Id))" >
+                                    <i class="oi oi-plus"></i>
+                                </button>
+                            }
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var subElement in SelectedWindow.SubElements)
+                    {
+                        string colorClass = (subElement == SelectedSubElement) ? "bg-info" : "";
+                        <tr class="@colorClass" style="cursor:pointer" @onclick="() => { SelectedSubElement = subElement; }">
+                            <td>@subElement.Element</td>
+                            <td>@subElement.ElementType?.Code</td>
+                            <td>@subElement.Width</td>
+                            <td>@subElement.Height</td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        @onclick="(() => EditSubElement(subElement))">
+                                    <i class="oi oi-pencil"></i>
+                                </button>
+                                <button class="btn btn-danger"
+                                        @onclick="(() => DeleteSubElement(subElement))">
+                                    <i class="oi oi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
         </div>
     </div>
 </div>
@@ -106,8 +151,12 @@
     [Parameter]
     public int? windowId { get; set; }
 
+    [Parameter]
+    public int? subElementId { get; set; }
+
     DAL.Entities.Order SelectedOrder = new DAL.Entities.Order();
     DAL.Entities.Window SelectedWindow = new DAL.Entities.Window();
+    DAL.Entities.SubElement SelectedSubElement = new DAL.Entities.SubElement();
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,6 +185,11 @@
         {
             SelectedWindow = WindowService.Windows.FirstOrDefault(w => w.Id == windowId) ?? new DAL.Entities.Window();
         }
+
+        if (subElementId != null)
+        {
+            SelectedSubElement = SelectedWindow.SubElements.FirstOrDefault(s => s.Id == subElementId) ?? new DAL.Entities.SubElement();
+        }
     }
 
     void ShowOrder(int id)
@@ -156,6 +210,7 @@
     async Task RefreshWindowsByOrderId (int orderId)
     {
         await WindowService.GetWindowsByOrderId(orderId);
+        SelectedWindow = WindowService.Windows.FirstOrDefault() ?? new DAL.Entities.Window();
     }
 
     void CreateWindow(int orderId)
@@ -171,5 +226,21 @@
     async Task DeleteWindow(int orderId, int windowId)
     {
         await WindowService.DeleteWindow(orderId, windowId);
+        SelectedWindow = new DAL.Entities.Window();
+    }
+
+    void CreateSubElement(int orderId, int windowId)
+    {
+        NavigationManager.NavigateTo($"/order/{orderId}/window/{windowId}/subelement/");
+    }
+
+    async Task DeleteSubElement(DAL.Entities.SubElement subElement)
+    {
+        await SubElementService.DeleteSubElement(SelectedOrder.Id, SelectedWindow.Id, subElement);
+    }
+
+    async void EditSubElement(DAL.Entities.SubElement subElement)
+    {
+        NavigationManager.NavigateTo($"/order/{SelectedOrder.Id}/window/{SelectedWindow.Id}/subelement/{subElement.Id}");
     }
 }

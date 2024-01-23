@@ -18,6 +18,7 @@ namespace DAL.Repositories
         public IDbContextTransaction Transaction { get; private set; }
         public IWindowsRepository Windows { get; }
         public IElementTypesRepository ElementTypes { get; }
+        public ISubElementsRepository SubElements { get; }
 
         public UnitOfWork(ApplicationDBContext context)
         {
@@ -28,6 +29,7 @@ namespace DAL.Repositories
             Orders = new OrdersRepository(context);
             Windows = new WindowsRepository(context);
             ElementTypes = new ElementTypesRepository(context);
+            SubElements = new SubElementsRepository(context);
         }
 
         public Task<int> CompleteAsync(CancellationToken cancellationToken)

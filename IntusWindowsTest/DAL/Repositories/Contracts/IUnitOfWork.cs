@@ -9,6 +9,7 @@ namespace DAL.Repositories.Contracts
         IOrdersRepository Orders { get; }
         IWindowsRepository Windows { get; }
         IElementTypesRepository ElementTypes { get; }
+        ISubElementsRepository SubElements { get; }
         
         Task<int> CompleteAsync(CancellationToken cancellationToken);
 

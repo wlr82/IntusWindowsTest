@@ -45,9 +45,9 @@ namespace IntusWindowsTest.Server.Services.OrderService
                 {
                     dbOrder.Name = order.Name;
                     dbOrder.State = dbState;
-                }
 
-                await uow.CompleteAsync(ct);
+                    await uow.CompleteAsync(ct);
+                }
             }
 
             return dbOrder;

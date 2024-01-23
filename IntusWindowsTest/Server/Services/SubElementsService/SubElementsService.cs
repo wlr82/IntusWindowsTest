@@ -1,6 +1,5 @@
-﻿using DAL.Entities;
-using DAL.Repositories.Contracts;
-using IntusWindowsTest.Client.Pages;
+﻿using DAL.Repositories.Contracts;
+using SubElement = DAL.Entities.SubElement;
 
 namespace IntusWindowsTest.Server.Services.SubElementsService
 {
@@ -11,6 +10,17 @@ namespace IntusWindowsTest.Server.Services.SubElementsService
         public SubElementsService(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
+        }
+
+        public async Task<SubElement?> GetSubElementById(int subElementId, CancellationToken cancellationToken)
+        {
+            SubElement? dbSubElement;
+            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            {
+                dbSubElement = await uow.SubElements.GetByIdAsync(subElementId, cancellationToken);
+            }
+
+            return dbSubElement;
         }
 
         public async Task<SubElement?> CreateSubElement(SubElement subElement, CancellationToken cancellationToken)
@@ -33,32 +43,50 @@ namespace IntusWindowsTest.Server.Services.SubElementsService
                     Window = dbWindow
                 };
 
-                //dbSubElement = await uow.States.AddAndReturnEntityAsync(entWindow, cancellationToken);
-                //await uow.CompleteAsync(ct);
+                dbSubElement = await uow.SubElements.AddAndReturnEntityAsync(entSubElement, cancellationToken);
+                await uow.CompleteAsync(cancellationToken);
             }
 
-            return null;
-
+            return dbSubElement;
         }
 
-        public Task<bool> DeleteSubElement(int subElementId, CancellationToken cancellationToken)
+        public async Task<bool> DeleteSubElement(int subElementId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            bool result;
+            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            {
+                result = await uow.SubElements.DeleteByIdAsync(subElementId, cancellationToken);
+                if (result == false)
+                {
+                    return false;
+                }
+
+                await uow.CompleteAsync(cancellationToken);
+            }
+
+            return true;
         }
 
-        public Task<SubElement?> GetSubElementById(int subElementId, CancellationToken cancellationToken)
+        public async Task<SubElement?> UpdateSubElement(SubElement subElement, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-        }
+            SubElement? dbSubElement;
+            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            {
+                dbSubElement = await uow.SubElements.GetByIdAsync(subElement.Id, cancellationToken);
+                var dbElementType = await uow.ElementTypes.GetByIdAsync(subElement.ElementType.Id, cancellationToken);
 
-        public Task<List<SubElement>> GetSubElementsByWindowId(int window)
-        {
-            throw new NotImplementedException();
-        }
+                if (dbSubElement != null)
+                {
+                    dbSubElement.Element = subElement.Element;
+                    dbSubElement.Width = subElement.Width;
+                    dbSubElement.Height = subElement.Height;
+                    dbSubElement.ElementType = dbElementType;
 
-        public Task<SubElement?> UpdateSubElement(SubElement subElement, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
+                    await uow.CompleteAsync(cancellationToken);
+                }
+            }
+
+            return dbSubElement;
         }
     }
 }

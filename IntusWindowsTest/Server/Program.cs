@@ -7,6 +7,7 @@ using IntusWindowsTest.Server.Services.OrderService;
 using IntusWindowsTest.Server.Services.StateService;
 using IntusWindowsTest.Server.Services.WindowsService;
 using IntusWindowsTest.Server.Services.ElementTypeService;
+using IntusWindowsTest.Server.Services.SubElementsService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IStateService, StateService>();
 builder.Services.AddScoped<IWindowService, WindowService>();
 builder.Services.AddScoped<IElementTypeService, ElementTypeService>();
+builder.Services.AddScoped<ISubElementsService, SubElementsService>();
 
 var app = builder.Build();
 InitializeDatabase(app);

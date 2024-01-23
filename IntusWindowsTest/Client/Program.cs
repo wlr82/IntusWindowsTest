@@ -1,6 +1,8 @@
 using IntusWindowsTest.Client;
+using IntusWindowsTest.Client.Services.ElementTypeService;
 using IntusWindowsTest.Client.Services.OrderService;
 using IntusWindowsTest.Client.Services.StateService;
+using IntusWindowsTest.Client.Services.SubElementService;
 using IntusWindowsTest.Client.Services.WindowService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -16,5 +18,7 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IStateService, StateService>();
 builder.Services.AddScoped<IWindowService, WindowService>();
+builder.Services.AddScoped<IElementTypeService, ElementTypeService>();
+builder.Services.AddScoped<ISubElementService, SubElementService>();
 
 await builder.Build().RunAsync();

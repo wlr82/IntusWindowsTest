@@ -51,7 +51,7 @@ namespace DAL.Repositories
             return entityEntry.Entity;
         }
 
-        public async Task<TEntity?> GetByIdAsync(TIdentity id, CancellationToken cancellationToken)
+        public virtual async Task<TEntity?> GetByIdAsync(TIdentity id, CancellationToken cancellationToken)
         {
             return await DbSet.FindAsync(id, cancellationToken);
         }

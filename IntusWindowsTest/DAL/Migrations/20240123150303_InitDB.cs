@@ -3,6 +3,8 @@ using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DAL.Migrations
 {
     /// <inheritdoc />
@@ -114,6 +116,59 @@ namespace DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.InsertData(
+                table: "ElementTypes",
+                columns: new[] { "Id", "Code" },
+                values: new object[,]
+                {
+                    { 1, "Window" },
+                    { 2, "Doors" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "States",
+                columns: new[] { "Id", "Code" },
+                values: new object[,]
+                {
+                    { 1, "NY" },
+                    { 2, "CA" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Orders",
+                columns: new[] { "Id", "Name", "StateId" },
+                values: new object[,]
+                {
+                    { 1, "New York Building 1", 1 },
+                    { 2, "California Hotel AJK", 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Windows",
+                columns: new[] { "Id", "Name", "OrderId", "QuantityOfWindows" },
+                values: new object[,]
+                {
+                    { 1, "A51", 1, 4 },
+                    { 2, "C Zone 5", 1, 2 },
+                    { 3, "GLB", 2, 3 },
+                    { 4, "OHF", 2, 10 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SubElements",
+                columns: new[] { "Id", "Element", "ElementTypeId", "Height", "Width", "WindowId" },
+                values: new object[,]
+                {
+                    { 1, "1", 2, 1850, 1200, 1 },
+                    { 2, "2", 1, 1850, 800, 1 },
+                    { 3, "3", 1, 1850, 700, 1 },
+                    { 4, "1", 1, 2000, 1500, 2 },
+                    { 5, "1", 2, 2200, 1400, 3 },
+                    { 6, "2", 1, 2200, 600, 3 },
+                    { 7, "1", 1, 2000, 1500, 4 },
+                    { 8, "1", 1, 2000, 1500, 4 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ElementTypes_Code",

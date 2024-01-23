@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IntusWindowsTest.Server.Controllers
 {
     [ApiController]
-    [Route("api/element/type")]
+    [Route("api/elementtype")]
     public class ElementTypeController : ControllerBase
     {
         private readonly IElementTypeService _elementTypeService;

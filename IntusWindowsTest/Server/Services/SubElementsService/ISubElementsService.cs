@@ -4,7 +4,6 @@ namespace IntusWindowsTest.Server.Services.SubElementsService
 {
     public interface ISubElementsService
     {
-        Task<List<SubElement>> GetSubElementsByWindowId(int window);
         Task<SubElement?> GetSubElementById(int subElementId, CancellationToken cancellationToken);
         Task<SubElement?> UpdateSubElement(SubElement subElement, CancellationToken cancellationToken);
         Task<SubElement?> CreateSubElement(SubElement subElement, CancellationToken cancellationToken);

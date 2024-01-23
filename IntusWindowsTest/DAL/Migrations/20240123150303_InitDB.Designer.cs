@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240122135715_InitDB")]
+    [Migration("20240123150303_InitDB")]
     partial class InitDB
     {
         /// <inheritdoc />
@@ -37,6 +37,18 @@ namespace DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("ElementTypes", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "Window"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "Doors"
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.Order", b =>
@@ -57,6 +69,20 @@ namespace DAL.Migrations
                     b.HasIndex("StateId");
 
                     b.ToTable("Orders", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "New York Building 1",
+                            StateId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "California Hotel AJK",
+                            StateId = 2
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.State", b =>
@@ -75,6 +101,18 @@ namespace DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("States", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "NY"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "CA"
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.SubElement", b =>
@@ -106,6 +144,80 @@ namespace DAL.Migrations
                     b.HasIndex("WindowId");
 
                     b.ToTable("SubElements", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Element = "1",
+                            ElementTypeId = 2,
+                            Height = 1850,
+                            Width = 1200,
+                            WindowId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Element = "2",
+                            ElementTypeId = 1,
+                            Height = 1850,
+                            Width = 800,
+                            WindowId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Element = "3",
+                            ElementTypeId = 1,
+                            Height = 1850,
+                            Width = 700,
+                            WindowId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Element = "1",
+                            ElementTypeId = 1,
+                            Height = 2000,
+                            Width = 1500,
+                            WindowId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Element = "1",
+                            ElementTypeId = 2,
+                            Height = 2200,
+                            Width = 1400,
+                            WindowId = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Element = "2",
+                            ElementTypeId = 1,
+                            Height = 2200,
+                            Width = 600,
+                            WindowId = 3
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Element = "1",
+                            ElementTypeId = 1,
+                            Height = 2000,
+                            Width = 1500,
+                            WindowId = 4
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Element = "1",
+                            ElementTypeId = 1,
+                            Height = 2000,
+                            Width = 1500,
+                            WindowId = 4
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.Window", b =>
@@ -129,6 +241,36 @@ namespace DAL.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("Windows", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "A51",
+                            OrderId = 1,
+                            QuantityOfWindows = 4
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "C Zone 5",
+                            OrderId = 1,
+                            QuantityOfWindows = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "GLB",
+                            OrderId = 2,
+                            QuantityOfWindows = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "OHF",
+                            OrderId = 2,
+                            QuantityOfWindows = 10
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.Order", b =>

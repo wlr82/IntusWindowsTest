@@ -1,0 +1,95 @@
+﻿@page "/order/{orderId:int}/window/{windowId:int}/subelement/"
+@page "/order/{orderId:int}/window/{windowId:int}/subelement/{id:int}"
+@inject NavigationManager NavigationManager
+@inject IElementTypeService ElementTypeService
+@inject ISubElementService SubElementService
+@inject IWindowService WindowService
+@inject IOrderService OrderService
+
+@if (Id is null)
+{
+    <PageTitle>Create a new element</PageTitle>
+    <h3>Create a new element</h3>
+}
+else
+{
+    <PageTitle>Edit @subElement?.Element</PageTitle>
+    <h3>Edit @subElement?.Element</h3>
+}
+
+<EditForm Model="subElement" OnSubmit="HandleSubmit">
+    <div>
+        <label for="element">Name</label>
+        <InputText id="element" @bind-Value="subElement.Element" class="form-control" />
+    </div>
+    <div>
+        <label for="type">Type</label>
+        <InputSelect id="type" class="form-control" placeholder="Type" @bind-Value="subElement.ElementType.Id">
+            @foreach (var elemenType in ElementTypeService.ElementTypes)
+            {
+                <option value="@elemenType.Id">
+                    @elemenType.Code
+                </option>
+            }
+        </InputSelect>
+    </div>
+    <div>
+        <label for="width">Width</label>
+        <InputNumber id="width" @bind-Value="subElement.Width" class="form-control" />
+    </div>
+    <div>
+        <label for="height">Height</label>
+        <InputNumber id="height" @bind-Value="subElement.Height" class="form-control" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">@btnText</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? orderId { get; set; }
+
+    [Parameter]
+    public int? windowId { get; set; }
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    DAL.Entities.SubElement subElement = new DAL.Entities.SubElement() { Element = "New element", ElementType = new DAL.Entities.ElementType() { Code = string.Empty} };
+    string btnText = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        btnText = Id == null ? "Save new sub element" : "Update sub element";
+        await ElementTypeService.GetElementTypes();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var result = await SubElementService.GetSubElementById((int)Id);
+            if (result is not null)
+                subElement = result;
+        }
+        else
+        {
+            subElement.ElementType.Id = ElementTypeService.ElementTypes.FirstOrDefault().Id;
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        subElement.Window = await WindowService.GetWindowById((int)windowId);
+        subElement.Window.Order = await OrderService.GetOrderById((int)orderId);
+
+        if (Id is null)
+        {
+            await SubElementService.CreateSubElement(subElement);
+        }
+        else
+        {
+            await SubElementService.UpdateSubElement(subElement);
+        }
+    }
+}
