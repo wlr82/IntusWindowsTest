@@ -18,7 +18,7 @@ namespace DAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseMySQL("Server=localhost;port=4304;database=IntusTest;user=root;password=some_pass");          
+            //builder.UseMySQL("Server=localhost;port=4304;database=IntusTest;user=root;password=some_pass");          
         }
 
         public virtual DbSet<State> States { get; set; }
