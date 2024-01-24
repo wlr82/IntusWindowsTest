@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{FDC7693F-5
 		Pref Test Task.pdf = Pref Test Task.pdf
 	EndProjectSection
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7138408A-691F-4996-8C10-6EAFB778B960}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{3583C2F0-E6CD-4943-BB35-A49E1131E112}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3583C2F0-E6CD-4943-BB35-A49E1131E112}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3583C2F0-E6CD-4943-BB35-A49E1131E112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7138408A-691F-4996-8C10-6EAFB778B960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7138408A-691F-4996-8C10-6EAFB778B960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7138408A-691F-4996-8C10-6EAFB778B960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7138408A-691F-4996-8C10-6EAFB778B960}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

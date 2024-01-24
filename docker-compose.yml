@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  intuswindowstest.server:
+    image: ${DOCKER_REGISTRY-}intuswindowstestserver
+    build:
+      context: .
+      dockerfile: IntusWindowsTest/Server/Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
