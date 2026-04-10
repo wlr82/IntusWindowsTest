@@ -1,4 +1,4 @@
-﻿using DAL.Entities;
+using DAL.Entities;
 using DAL.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,105 +6,71 @@ namespace IntusWindowsTest.Server.Services.WindowsService
 {
     public class WindowService : IWindowService
     {
-        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly IUnitOfWork _uow;
 
-        public WindowService(IUnitOfWorkFactory unitOfWorkFactory)
+        public WindowService(IUnitOfWork uow)
         {
-            _unitOfWorkFactory = unitOfWorkFactory;
+            _uow = uow;
         }
 
         public async Task<List<Window>> GetWindows()
         {
-            List<Window> result = new();
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
-            {
-                result = await uow.Windows
-                    .GetAll()
-                    .Include(w => w.Order)
-                    .Include(w => w.SubElements)
-                    .ThenInclude(s => s.ElementType)
-                    .ToListAsync();
-            }
-            return result;
+            return await _uow.Windows
+                .GetAll()
+                .Include(w => w.Order)
+                .Include(w => w.SubElements)
+                .ThenInclude(s => s.ElementType)
+                .ToListAsync();
         }
 
         public async Task<List<Window>> GetWindowsByOrderId(int orderId)
         {
-            List<Window> result = new();
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
-            {
-                result = await uow.Windows.GetWindowsByOrderId(orderId);
-            }
-            return result;
+            return await _uow.Windows.GetWindowsByOrderId(orderId);
         }
 
         public async Task<Window?> GetWindowById(int windowId, CancellationToken cancellationToken)
         {
-            Window? dbWindow;
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
-            {
-                dbWindow = await uow.Windows.GetByIdAsync(windowId, cancellationToken);
-            }
-
-            return dbWindow;
+            return await _uow.Windows.GetByIdAsync(windowId, cancellationToken);
         }
 
         public async Task<Window?> UpdateWindow(Window window, CancellationToken ct)
         {
-            Window? dbWindow;
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
-            {
-                dbWindow = await uow.Windows.GetByIdAsync(window.Id, ct);
-                if (dbWindow != null)
-                {
-                    dbWindow.Name = window.Name;
-                    dbWindow.QuantityOfWindows = window.QuantityOfWindows;
+            var dbWindow = await _uow.Windows.GetByIdAsync(window.Id, ct);
+            if (dbWindow == null)
+                return null;
 
-                    await uow.CompleteAsync(ct);
-                }
-            }
+            dbWindow.Name = window.Name;
+            dbWindow.QuantityOfWindows = window.QuantityOfWindows;
 
+            await _uow.CompleteAsync(ct);
             return dbWindow;
         }
 
         public async Task<Window?> CreateWindow(Window window, CancellationToken ct)
         {
-            Window? dbWindow;
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            var dbOrder = await _uow.Orders.GetByIdAsync(window.Order.Id, ct);
+            if (dbOrder == null)
+                return null;
+
+            var entWindow = new Window()
             {
-                var dbOrder = await uow.Orders.GetByIdAsync(window.Order.Id, ct);
-                if (dbOrder == null)
-                {
-                    return null;
-                }
-                var entWindow = new Window()
-                {
-                    Name = window.Name,
-                    QuantityOfWindows = window.QuantityOfWindows,
-                    Order = dbOrder
-                };
+                Name = window.Name,
+                QuantityOfWindows = window.QuantityOfWindows,
+                Order = dbOrder
+            };
 
-                dbWindow = await uow.Windows.AddAndReturnEntityAsync(entWindow, ct);
-                await uow.CompleteAsync(ct);
-            }
-
+            var dbWindow = await _uow.Windows.AddAndReturnEntityAsync(entWindow, ct);
+            await _uow.CompleteAsync(ct);
             return dbWindow;
         }
 
         public async Task<bool> DeleteWindow(int windowId, CancellationToken ct)
         {
-            bool result;
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
-            {
-                result = await uow.Windows.DeleteByIdAsync(windowId, ct);
-                if (result == false)
-                {
-                    return false;
-                }
+            var result = await _uow.Windows.DeleteByIdAsync(windowId, ct);
+            if (!result)
+                return false;
 
-                await uow.CompleteAsync(ct);
-            }
-
+            await _uow.CompleteAsync(ct);
             return true;
         }
     }

@@ -1,91 +1,67 @@
-﻿using DAL.Repositories.Contracts;
+using DAL.Repositories.Contracts;
 using SubElement = DAL.Entities.SubElement;
 
 namespace IntusWindowsTest.Server.Services.SubElementsService
 {
     public class SubElementsService : ISubElementsService
     {
-        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly IUnitOfWork _uow;
 
-        public SubElementsService(IUnitOfWorkFactory unitOfWorkFactory)
+        public SubElementsService(IUnitOfWork uow)
         {
-            _unitOfWorkFactory = unitOfWorkFactory;
+            _uow = uow;
         }
 
         public async Task<SubElement?> GetSubElementById(int subElementId, CancellationToken cancellationToken)
         {
-            SubElement? dbSubElement;
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
-            {
-                dbSubElement = await uow.SubElements.GetByIdAsync(subElementId, cancellationToken);
-            }
-
-            return dbSubElement;
+            return await _uow.SubElements.GetByIdAsync(subElementId, cancellationToken);
         }
 
         public async Task<SubElement?> CreateSubElement(SubElement subElement, CancellationToken cancellationToken)
         {
-            SubElement? dbSubElement;
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
+            var dbWindow = await _uow.Windows.GetByIdAsync(subElement.Window.Id, cancellationToken);
+            var dbElementType = await _uow.ElementTypes.GetByIdAsync(subElement.ElementType.Id, cancellationToken);
+            if (dbWindow == null || dbElementType == null)
+                return null;
+
+            var entSubElement = new SubElement()
             {
-                var dbWindow = await uow.Windows.GetByIdAsync(subElement.Window.Id, cancellationToken);
-                var dbElementType = await uow.ElementTypes.GetByIdAsync(subElement.ElementType.Id, cancellationToken);
-                if (dbWindow == null || dbElementType == null)
-                {
-                    return null;
-                }
-                var entSubElement = new SubElement()
-                {
-                    Element = subElement.Element,
-                    Width = subElement.Width,
-                    Height = subElement.Height,
-                    ElementType = dbElementType,
-                    Window = dbWindow
-                };
+                Element = subElement.Element,
+                Width = subElement.Width,
+                Height = subElement.Height,
+                ElementType = dbElementType,
+                Window = dbWindow
+            };
 
-                dbSubElement = await uow.SubElements.AddAndReturnEntityAsync(entSubElement, cancellationToken);
-                await uow.CompleteAsync(cancellationToken);
-            }
-
+            var dbSubElement = await _uow.SubElements.AddAndReturnEntityAsync(entSubElement, cancellationToken);
+            await _uow.CompleteAsync(cancellationToken);
             return dbSubElement;
         }
 
         public async Task<bool> DeleteSubElement(int subElementId, CancellationToken cancellationToken)
         {
-            bool result;
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
-            {
-                result = await uow.SubElements.DeleteByIdAsync(subElementId, cancellationToken);
-                if (result == false)
-                {
-                    return false;
-                }
+            var result = await _uow.SubElements.DeleteByIdAsync(subElementId, cancellationToken);
+            if (!result)
+                return false;
 
-                await uow.CompleteAsync(cancellationToken);
-            }
-
+            await _uow.CompleteAsync(cancellationToken);
             return true;
         }
 
         public async Task<SubElement?> UpdateSubElement(SubElement subElement, CancellationToken cancellationToken)
         {
-            SubElement? dbSubElement;
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
-            {
-                dbSubElement = await uow.SubElements.GetByIdAsync(subElement.Id, cancellationToken);
-                var dbElementType = await uow.ElementTypes.GetByIdAsync(subElement.ElementType.Id, cancellationToken);
+            var dbSubElement = await _uow.SubElements.GetByIdAsync(subElement.Id, cancellationToken);
+            var dbElementType = await _uow.ElementTypes.GetByIdAsync(subElement.ElementType.Id, cancellationToken);
 
-                if (dbSubElement != null)
-                {
-                    dbSubElement.Element = subElement.Element;
-                    dbSubElement.Width = subElement.Width;
-                    dbSubElement.Height = subElement.Height;
-                    dbSubElement.ElementType = dbElementType;
+            if (dbSubElement == null)
+                return null;
 
-                    await uow.CompleteAsync(cancellationToken);
-                }
-            }
+            dbSubElement.Element = subElement.Element;
+            dbSubElement.Width = subElement.Width;
+            dbSubElement.Height = subElement.Height;
+            dbSubElement.ElementType = dbElementType;
 
+            await _uow.CompleteAsync(cancellationToken);
             return dbSubElement;
         }
     }

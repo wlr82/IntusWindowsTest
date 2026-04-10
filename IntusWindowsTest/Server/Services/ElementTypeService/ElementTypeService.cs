@@ -1,4 +1,4 @@
-﻿using DAL.Entities;
+using DAL.Entities;
 using DAL.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,21 +6,16 @@ namespace IntusWindowsTest.Server.Services.ElementTypeService
 {
     public class ElementTypeService : IElementTypeService
     {
-        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly IUnitOfWork _uow;
 
-        public ElementTypeService(IUnitOfWorkFactory unitOfWorkFactory)
+        public ElementTypeService(IUnitOfWork uow)
         {
-            _unitOfWorkFactory = unitOfWorkFactory;
+            _uow = uow;
         }
 
         public async Task<List<ElementType>> GetElemetTypes()
         {
-            List<ElementType> result = new();
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
-            {
-                result = await uow.ElementTypes.GetAll().ToListAsync();
-            }
-            return result;
+            return await _uow.ElementTypes.GetAll().ToListAsync();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using DAL.Entities;
+using DAL.Entities;
 using DAL.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,21 +6,16 @@ namespace IntusWindowsTest.Server.Services.StateService
 {
     public class StateService : IStateService
     {
-        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly IUnitOfWork _uow;
 
-        public StateService(IUnitOfWorkFactory unitOfWorkFactory)
+        public StateService(IUnitOfWork uow)
         {
-            _unitOfWorkFactory = unitOfWorkFactory;
+            _uow = uow;
         }
 
         public async Task<List<State>> GetStates()
         {
-            List<State> result = new();
-            using (var uow = _unitOfWorkFactory.MakeUnitOfWork())
-            {
-                result = await uow.States.GetAll().ToListAsync();
-            }
-            return result;
+            return await _uow.States.GetAll().ToListAsync();
         }
     }
 }

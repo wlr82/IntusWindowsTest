@@ -22,9 +22,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseMySQL(dbConnectionString);
 });
-builder.Services.AddSingleton(sp => ApplicationDbContextFactoryInitializer.Create(dbConnectionString));
-builder.Services.AddSingleton<IUnitOfWorkFactory, UnitOfWorkFactory>();
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Ent services
 builder.Services.AddScoped<IOrderService, OrderService>();
